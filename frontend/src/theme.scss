@@ -1,0 +1,12 @@
+@import '~@angular/material/theming';
+@import 'zuehlke_palette';
+
+
+@include mat-core();
+
+$zuehlke-app-primary: mat-palette($zuehlke_primary_palette);
+$zuehlke-app-accent:  mat-palette($zuehlke_accent_palette);
+
+$zuehlke-app-theme: mat-light-theme($zuehlke-app-primary, $zuehlke-app-accent);
+
+@include angular-material-theme($zuehlke-app-theme);

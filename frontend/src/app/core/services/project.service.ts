@@ -1,21 +1,20 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {Project} from '../../shared/domain/Project';
 import {HttpClient} from '@angular/common/http';
-import {Employee} from './domain/Employee';
+import {catchError} from 'rxjs/operators';
 
-@Injectable({providedIn: 'root'})
-export class EmployeeService {
+@Injectable({
+  providedIn: 'root'
+})
+export class ProjectService {
 
   constructor(private http: HttpClient) {
   }
 
-  public getAllEmployees(): Observable<Employee[]> {
-
-    return this.http
-      .get<Employee[]>('/api/employees')
-      .pipe(catchError(this.handleError('getAllEmployees', [])));
-
+  public getAllProjects(): Observable<Project[]> {
+    return this.http.get<Project[]>('/api/projects')
+      .pipe(catchError(this.handleError('getAllProjects', [])));
   }
 
   /**
@@ -40,11 +39,5 @@ export class EmployeeService {
 
   private log(s: string) {
     console.log(`${this}: ${s}`);
-  }
-
-  getEmployee(id: string): Observable<Employee> {
-    return this.http
-      .get<Employee>(`/api/employee/${id}`)
-      .pipe(catchError(this.handleError('getEmployee', null)));
   }
 }

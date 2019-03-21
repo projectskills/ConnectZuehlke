@@ -1,0 +1,10 @@
+<div class="main-container">
+  <h2>A list of all Zühlke Projects</h2>
+
+  <mat-form-field>
+    <input matInput [(ngModel)]="searchQuery" placeholder="Type something to search">
+  </mat-form-field>
+
+  <app-project-cards [projects]="(projects | async) | search:'name':searchQuery"></app-project-cards>
+</div>
+
