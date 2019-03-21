@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {ChartData} from "../../shared/domain/ChartData";
+import {ChartData} from '../../shared/domain/ChartData';
 
 @Component({
   selector: 'app-projects-charts',
