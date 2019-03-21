@@ -1,10 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ChartData} from '../../shared/domain/ChartData';
 
 @Component({
   selector: 'app-projects-charts',
   templateUrl: './projects-charts.component.html',
-  styleUrls: ['./projects-charts.component.scss']
+  styleUrls: ['./projects-charts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsChartsComponent {
   _chartData: ChartData[];
@@ -13,10 +14,10 @@ export class ProjectsChartsComponent {
   }
 
   @Input('chartData')
-  set chartData(value: ChartData[]) {
-    this._chartData = value
+  set chartData(chartData: ChartData[]) {
+    this._chartData = chartData
       .sort((a, b) => b.value - a.value)
-      .map(chartData => ({value: chartData.value * 100, name: chartData.name}) as ChartData);
+      .map(data => ({value: data.value * 100, name: data.name}) as ChartData);
   }
 
   public colorScheme = {
@@ -28,5 +29,4 @@ export class ProjectsChartsComponent {
   public getPartialChartData(length: number): ChartData[] {
     return this.chartData.slice(0, length);
   }
-
 }
