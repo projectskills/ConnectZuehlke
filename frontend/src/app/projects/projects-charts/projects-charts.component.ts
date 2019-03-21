@@ -15,7 +15,7 @@ export class ProjectsChartsComponent {
 
   @Input('chartData')
   set chartData(chartData: ChartData[]) {
-    this._chartData = chartData
+    this._chartData = (chartData || [])
       .sort((a, b) => b.value - a.value)
       .map(data => ({value: data.value * 100, name: data.name}) as ChartData);
   }
@@ -23,8 +23,6 @@ export class ProjectsChartsComponent {
   public colorScheme = {
     domain: ['#66CCFF', '#0099CC', '#CCFF00', '#00CC66']
   };
-
-  public view = [700, 200];
 
   public getPartialChartData(length: number): ChartData[] {
     return this.chartData.slice(0, length);
