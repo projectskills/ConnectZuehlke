@@ -1,5 +1,5 @@
 <div class="main-container">
-  <div *ngIf="projectLoading">
+  <div *ngIf="projectLoading" class="loading-container">
     <p>Loading...</p>
     <mat-spinner></mat-spinner>
   </div>
@@ -27,16 +27,19 @@
     <h3>Stats</h3>
     <mat-divider></mat-divider>
     <p>Insert some fancy graphics here...</p>
+
     <mat-card>
+      <mat-card-header>
+        <h2>fancy graphic 1</h2>
+      </mat-card-header>
       <mat-card-content>
-        <mat-card-header>
-          <h2>fancy graphic 1</h2>
-        </mat-card-header>
-        <ngx-charts-number-card
-          [view]="view"
-          [scheme]="colorScheme"
-          [results]="results$ | async">
-        </ngx-charts-number-card>
+        <div>
+          <ngx-charts-number-card
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="results$ | async">
+          </ngx-charts-number-card>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
