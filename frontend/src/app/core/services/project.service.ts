@@ -24,29 +24,8 @@ export class ProjectService {
   }
 
   public getProjectSkillRatings(projectId: string): Observable<SkillRating[]> {
-    return of<SkillRating[]>([
-      {
-        skill: {
-          name: 'Java',
-          id: 'id123'
-        },
-        rating: 0.6
-      },
-      {
-        skill: {
-          name: 'Springboot',
-          id: 'id153'
-        },
-        rating: 0.2
-      },
-      {
-        skill: {
-          name: 'Angular',
-          id: 'id163'
-        },
-        rating: 0.2
-      }
-    ]);
+    return this.http.get<SkillRating>(`/api/projects/${projectId}/skills`)
+      .pipe(catchError(this.handleError('getProjectSkillRatings', null)));
   }
 
   /**
