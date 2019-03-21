@@ -20,7 +20,7 @@ export class ProjectsChartsComponent {
   }
 
   public colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C']
+    domain: ['#66CCFF', '#0099CC', '#CCFF00', '#00CC66']
   };
 
   public view = [700, 200];

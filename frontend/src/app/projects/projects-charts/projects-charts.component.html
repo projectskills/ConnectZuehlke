@@ -3,9 +3,11 @@
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Bar">
       <ngx-charts-bar-horizontal
-        [view]="view"
         [scheme]="colorScheme"
-        [results]="getPartialChartData(4)">
+        [results]="getPartialChartData(4)"
+        [yAxis]="true"
+        [xScaleMax]="100"
+        [xAxis]="true">
       </ngx-charts-bar-horizontal>
     </mat-tab>
     <mat-tab label="All skills">
