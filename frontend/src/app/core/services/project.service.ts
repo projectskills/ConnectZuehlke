@@ -17,6 +17,11 @@ export class ProjectService {
       .pipe(catchError(this.handleError('getAllProjects', [])));
   }
 
+  public getProject(projectId: string): Observable<Project> {
+    return this.http.get<Project>(`/api/projects/${projectId}`)
+      .pipe(catchError(this.handleError('getProject', null)));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
