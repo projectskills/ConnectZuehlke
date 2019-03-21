@@ -3,3 +3,11 @@
   justify-content: space-between;
   flex-direction: column;
 }
+
+#chart {
+  display: flex;
+}
+
+::ng-deep div.mat-tab-body-wrapper{
+  margin-top: 1em;
+}

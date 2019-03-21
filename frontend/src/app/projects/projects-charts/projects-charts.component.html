@@ -1,15 +1,17 @@
 <div class="container">
-  <h4>Usage of Skills</h4>
+  <h4>Usage of project skills</h4>
   <mat-tab-group mat-align-tabs="center">
-    <mat-tab label="Bar">
-      <ngx-charts-bar-horizontal
-        [scheme]="colorScheme"
-        [results]="getPartialChartData(4)"
-        [yAxis]="true"
-        [xScaleMax]="100"
-        [xAxis]="true"
-      [showDataLabel]="true">
-      </ngx-charts-bar-horizontal>
+    <mat-tab label="Top 4 skills">
+      <div id="chart">
+        <ngx-charts-bar-horizontal
+          [scheme]="colorScheme"
+          [results]="getPartialChartData(4)"
+          [yAxis]="true"
+          [xScaleMax]="100"
+          [xAxis]="true"
+          [showDataLabel]="true">
+        </ngx-charts-bar-horizontal>
+      </div>
     </mat-tab>
     <mat-tab label="All skills">
       <mat-chip-list>
