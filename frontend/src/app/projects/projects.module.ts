@@ -9,7 +9,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule, MatTabsModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
@@ -40,6 +40,7 @@ import { ProjectsChartsComponent } from './projects-charts/projects-charts.compo
     MatIconModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    MatTabsModule,
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
     }),
