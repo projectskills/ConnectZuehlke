@@ -65,7 +65,7 @@ public class ProjectRestController {
         return insightProjectService.getProjectPicture(code);
     }
 
-    @GetMapping("{code}/matching")
+    @GetMapping("{code}/fittingemployees")
     public List<EmployeeRating> getProjectMatches(@PathVariable String code) {
         Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
                 .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
