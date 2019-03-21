@@ -44,7 +44,6 @@ public class ProjectRestController {
                 .collect(Collectors.toList());
     }
 
-
     @GetMapping("{code}")
     public Project getProject(@PathVariable String code) {
         return insightProjectService.getProject(code);

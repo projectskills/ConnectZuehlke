@@ -5,6 +5,7 @@ import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -29,19 +28,22 @@ public class InsightProjectServiceRemote implements InsightProjectService {
     public InsightProjectServiceRemote(RestTemplate insightRestTemplate) {
         this.insightRestTemplate = insightRestTemplate;
     }
+
     @Override
+    @Cacheable("projects")
     public List<Project> getProjects() {
         ResponseEntity<ListDto<ProjectDto>> response = this.insightRestTemplate
                 .exchange("/projects", GET, null, new ParameterizedTypeReference<ListDto<ProjectDto>>() {
                 });
 
-        logger.info("Counted in Response: "+response.getBody().getItems().size());
+        logger.info("Counted in Response: " + response.getBody().getItems().size());
         return response.getBody().getItems().stream()
                 .map(ProjectDto::toProject)
                 .collect(toList());
     }
 
     @Override
+    @Cacheable("projects")
     public Project getProject(String code) {
         ResponseEntity<ProjectDto> response = this.insightRestTemplate
                 .getForEntity("/projects/" + code, ProjectDto.class);
