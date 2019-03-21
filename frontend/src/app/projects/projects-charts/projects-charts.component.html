@@ -5,13 +5,13 @@
       <ngx-charts-bar-horizontal
         [view]="view"
         [scheme]="colorScheme"
-        [results]="chartData">
+        [results]="getPartialChartData(4)">
       </ngx-charts-bar-horizontal>
     </mat-tab>
     <mat-tab label="All skills">
       <mat-chip-list>
         <mat-chip color="primary" *ngFor="let skill of chartData">{{ skill.name }}
-          - {{ (skill.value * 100).toFixed(0) }}%
+          - {{ skill.value.toFixed(0) }}%
         </mat-chip>
       </mat-chip-list>
     </mat-tab>
