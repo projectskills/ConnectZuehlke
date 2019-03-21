@@ -31,9 +31,9 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
 
     this.chartData$ = this.projectService.getProjectSkillRatings('test').pipe(
       map(skillRating => {
-        return skillRating.map(result => <ChartData>{name: result.skill.name, value: result.rating})
+        return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
       })
-    )
+    );
   }
 
   ngOnDestroy(): void {
