@@ -3,7 +3,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {Project} from '../../shared/domain/Project';
 import {ProjectService} from '../../core/services/project.service';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {ChartData} from '../../shared/domain/ChartData';
 
 @Component({
   selector: 'app-projects-detail',
@@ -15,8 +16,15 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
   project$: Observable<Project>;
   projectLoading = true;
 
+  view = [700, 200];
+  results$: Observable<ChartData[]>;
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C']
+  };
+
   constructor(private route: ActivatedRoute,
-              private projectService: ProjectService) { }
+              private projectService: ProjectService) {
+  }
 
   ngOnInit() {
     this.subscriptions = this.route.params.subscribe(params => {
@@ -24,10 +32,15 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
       this.project$ = this.projectService.getProject(projectId)
         .pipe(tap(() => this.projectLoading = false));
     });
+
+    this.results$ = this.projectService.getProjectSkillRatings('test').pipe(
+      map(skillRating => {
+        return skillRating.map(result => <ChartData>{name: result.skill.name, value: result.rating})
+      })
+    )
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-
 }
