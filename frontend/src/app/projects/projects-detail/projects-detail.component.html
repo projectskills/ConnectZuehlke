@@ -5,28 +5,28 @@
   </div>
   <div class="project-container" *ngIf="project$ | async as project">
     <h1>{{ project.code }} - {{ project.name }}</h1>
+    <h3>Info</h3>
+    <mat-divider></mat-divider>
+    <div class="employee-number">
+      <mat-icon>person</mat-icon>
+      Employees:
+      <mat-chip-list>
+        <mat-chip color="primary" selected>{{ project.teamSize }}</mat-chip>
+      </mat-chip-list>
+    </div>
     <mat-accordion>
       <mat-expansion-panel (opened)="panelOpenState = true"
                            (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Info
+            Description
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div class="employee-number">
-          <mat-icon>person</mat-icon>
-          Employees:
-          <mat-chip-list>
-            <mat-chip color="primary" selected>{{ project.teamSize }}</mat-chip>
-          </mat-chip-list>
-        </div>
-        <strong>Description:</strong><br/>
         {{ project.description || 'No description provided.'}}
       </mat-expansion-panel>
     </mat-accordion>
     <h3>Stats</h3>
     <mat-divider></mat-divider>
-    <p>Insert some fancy graphics here...</p>
     <app-projects-charts [chartData]="chartData$ | async"></app-projects-charts>
   </div>
 </div>
