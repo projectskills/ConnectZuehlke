@@ -1,8 +1,9 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto;
 
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 @JsonIgnoreProperties
 public class CurrentProjectDto {
@@ -11,13 +12,13 @@ public class CurrentProjectDto {
     private ProjectDto project;
 
     @JsonProperty("Descriptions")
-    private DescriptionDto description;
+    private List<DescriptionDto> descriptions;
 
     public ProjectDto getProject() {
         return project;
     }
 
-    public DescriptionDto getDescription() {
-        return description;
+    public List<DescriptionDto> getDescriptions() {
+        return descriptions;
     }
 }
