@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface InsightSkillService {
     List<Skill> getSkillsFor(Project project, Employee employee);
+    List<Skill> getSkillsFor(Employee employee);
 }

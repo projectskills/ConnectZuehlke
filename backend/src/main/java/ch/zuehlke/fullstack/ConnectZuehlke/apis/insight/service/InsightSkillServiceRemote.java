@@ -47,4 +47,15 @@ public class InsightSkillServiceRemote implements InsightSkillService {
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
+
+    @Override
+    public List<Skill> getSkillsFor(Employee employee) {
+        ResponseEntity<List<SkillDto>> response = this.insightRestTemplate
+                .exchange("/employees/" + employee.getCode() + "/skills", GET, null, new ParameterizedTypeReference<List<SkillDto>>() {
+                });
+
+        return response.getBody().stream()
+                .map(SkillDto::toSkill)
+                .collect(Collectors.toList());
+    }
 }

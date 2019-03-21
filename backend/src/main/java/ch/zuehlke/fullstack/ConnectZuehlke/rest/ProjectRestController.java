@@ -11,11 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -35,10 +34,12 @@ public class ProjectRestController {
             "C23043" // CONCORDIA mobile app
     );
     private final InsightProjectService insightProjectService;
+    private final InsightEmployeeService insightEmployeeService;
     private final InsightSkillService skillService;
 
-    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightSkillService skillService) {
+    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService) {
         this.insightProjectService = insightProjectService;
+        this.insightEmployeeService = insightEmployeeService1;
         this.skillService = skillService;
     }
 
@@ -66,6 +67,32 @@ public class ProjectRestController {
     public @ResponseBody
     byte[] getProjectPicture(@PathVariable String code) throws IOException {
         return insightProjectService.getProjectPicture(code);
+    }
+
+    @GetMapping("{code}/matching")
+    public List<Employee> getProjectMatches(@PathVariable String code) {
+        List<Employee> topMatches = new ArrayList<>();
+        Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
+                .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
+        List<Employee> allEmployees = insightEmployeeService.getEmployees();
+
+        Map<Employee, List<Skill>> employeeSkills = allEmployees.stream().limit(50)
+                .collect(Collectors.toMap(Function.identity(), skillService::getSkillsFor));
+
+        HashMap<Employee, Double> employeeRatings = new HashMap<>();
+        employeeSkills.forEach((key, value) -> {
+            double rating = value.stream()
+                    .filter(skill -> projectRatings.keySet().contains(skill))
+                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill))
+                    .sum();
+            employeeRatings.put(key, rating);
+        });
+
+        return employeeRatings.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .limit(10)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("{code}/skills")
