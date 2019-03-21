@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Project} from '../../shared/domain/Project';
-import {HttpClient} from "@angular/common/http";
-import {catchError} from "rxjs/operators";
+import {HttpClient} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {
+  }
 
   public getAllProjects(): Observable<Project[]> {
     return this.http.get<Project[]>('/api/projects')

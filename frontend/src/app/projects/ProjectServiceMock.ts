@@ -1,5 +1,5 @@
 import {Observable, of} from 'rxjs';
-import {Project} from "../shared/domain/Project";
+import {Project} from '../shared/domain/Project';
 
 export const PROJECTS: Project[] = [
   {

@@ -1,16 +1,28 @@
 @import '../../../variables';
 
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .project-card {
   max-width: 30em;
   margin: 1em;
+  flex: 1 1 30em;
 
   &:hover {
     cursor: pointer;
     box-shadow: 0.5em 0.5em 0.5em 0 $zuehlke_accent;
   }
 
-  img {
+  .project-image {
     width: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 20em;
+    background-position: 50% 50%;
   }
 }
 
@@ -26,11 +38,6 @@
   color: $zuehlke_accent;
 }
 
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
 
 .employee-number {
   display: flex;
