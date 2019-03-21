@@ -17,7 +17,7 @@ import {ProjectCardsComponent} from './projects-cards/project-cards.component';
 import {MatCardModule} from '@angular/material/card';
 import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
 import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
-import {NgxChartsModule} from "@swimlane/ngx-charts";
+import {NgxChartsModule} from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
