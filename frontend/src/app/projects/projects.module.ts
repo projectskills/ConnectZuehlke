@@ -18,12 +18,14 @@ import {MatCardModule} from '@angular/material/card';
 import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
 import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
 import {NgxChartsModule} from "@swimlane/ngx-charts";
+import { ProjectsChartsComponent } from './projects-charts/projects-charts.component';
 
 @NgModule({
   declarations: [
     ProjectsListComponent,
     ProjectCardsComponent,
-    ProjectsDetailComponent
+    ProjectsDetailComponent,
+    ProjectsChartsComponent
   ],
   imports: [
     CommonModule,
