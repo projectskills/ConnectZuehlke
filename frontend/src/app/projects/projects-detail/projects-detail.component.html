@@ -27,8 +27,17 @@
     <h3>Stats</h3>
     <mat-divider></mat-divider>
     <p>Insert some fancy graphics here...</p>
-    <div>
-      <ngx-charts-number-card></ngx-charts-number-card>
-    </div>
+    <mat-card>
+      <mat-card-content>
+        <mat-card-header>
+          <h2>fancy graphic 1</h2>
+        </mat-card-header>
+        <ngx-charts-number-card
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="results$ | async">
+        </ngx-charts-number-card>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
