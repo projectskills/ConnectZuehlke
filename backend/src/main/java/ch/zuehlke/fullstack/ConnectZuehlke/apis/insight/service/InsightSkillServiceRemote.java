@@ -6,6 +6,7 @@ import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.SkillDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Skill;
+import ch.zuehlke.fullstack.ConnectZuehlke.domain.SkillExperience;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
@@ -49,13 +50,13 @@ public class InsightSkillServiceRemote implements InsightSkillService {
     }
 
     @Override
-    public List<Skill> getSkillsFor(Employee employee) {
+    public List<SkillExperience> getSkillsFor(Employee employee) {
         ResponseEntity<List<SkillDto>> response = this.insightRestTemplate
                 .exchange("/employees/" + employee.getCode() + "/skills", GET, null, new ParameterizedTypeReference<List<SkillDto>>() {
                 });
 
         return response.getBody().stream()
-                .map(SkillDto::toSkill)
+                .map(SkillDto::toSkillExperience)
                 .collect(Collectors.toList());
     }
 }

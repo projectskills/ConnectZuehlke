@@ -3,6 +3,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Skill;
+import ch.zuehlke.fullstack.ConnectZuehlke.domain.SkillExperience;
 
 import java.util.List;
 
@@ -11,9 +12,15 @@ import static java.util.Arrays.asList;
 public class InsightSkillServcieMocked implements InsightSkillService {
 
     public static final List<Skill> SKILLS = asList(
-            new Skill(1, "Android", 2),
-            new Skill(2, "Kotlin", 3),
-            new Skill(3, "MVVM", 1)
+            new Skill(1, "Android"),
+            new Skill(2, "Kotlin"),
+            new Skill(3, "MVVM")
+    );
+
+    public static final List<SkillExperience> SKILLSEXPERIENCE = asList(
+            new SkillExperience(SKILLS.get(0), 1),
+            new SkillExperience(SKILLS.get(0), 2),
+            new SkillExperience(SKILLS.get(0), 3)
     );
 
     @Override
@@ -22,7 +29,7 @@ public class InsightSkillServcieMocked implements InsightSkillService {
     }
 
     @Override
-    public List<Skill> getSkillsFor(Employee employee) {
-        return SKILLS;
+    public List<SkillExperience> getSkillsFor(Employee employee) {
+        return SKILLSEXPERIENCE;
     }
 }

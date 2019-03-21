@@ -3,10 +3,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.rest;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightProjectService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Skill;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.SkillRating;
+import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +11,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -70,27 +66,26 @@ public class ProjectRestController {
     }
 
     @GetMapping("{code}/matching")
-    public List<Employee> getProjectMatches(@PathVariable String code) {
-        List<Employee> topMatches = new ArrayList<>();
+    public List<EmployeeRating> getProjectMatches(@PathVariable String code) {
         Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
                 .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
         List<Employee> allEmployees = insightEmployeeService.getEmployees();
 
-        Map<Employee, List<Skill>> employeeSkills = allEmployees.stream().limit(50)
+        Map<Employee, List<SkillExperience>> employeeSkills = allEmployees.stream()
                 .collect(Collectors.toMap(Function.identity(), skillService::getSkillsFor));
-
-        HashMap<Employee, Double> employeeRatings = new HashMap<>();
-        employeeSkills.forEach((key, value) -> {
-            double rating = value.stream()
-                    .filter(skill -> projectRatings.keySet().contains(skill))
-                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill))
+        List<EmployeeRating> employeeRatings = new ArrayList<>();
+        employeeSkills.forEach((employee, skills) -> {
+            double rating = skills.stream()
+                    .filter(skill -> projectRatings
+                            .keySet()
+                            .contains(skill.getSkill()))
+                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
                     .sum();
-            employeeRatings.put(key, rating);
+            employeeRatings.add(new EmployeeRating(employee, rating));
         });
 
-        return employeeRatings.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
-                .map(Map.Entry::getKey)
+        return employeeRatings.stream()
+                .sorted(Comparator.comparing(EmployeeRating::getRating).reversed())
                 .limit(10)
                 .collect(Collectors.toList());
     }
