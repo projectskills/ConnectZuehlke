@@ -2,16 +2,14 @@ package ch.zuehlke.fullstack.ConnectZuehlke.rest;
 
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightProjectService;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
-import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
+import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,9 +30,13 @@ public class ProjectRestController {
             "C23043" // CONCORDIA mobile app
     );
     private final InsightProjectService insightProjectService;
+    private final InsightEmployeeService insightEmployeeService;
+    private final InsightSkillService skillService;
 
-    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService) {
+    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService) {
         this.insightProjectService = insightProjectService;
+        this.insightEmployeeService = insightEmployeeService1;
+        this.skillService = skillService;
     }
 
     @GetMapping("")
@@ -61,5 +63,48 @@ public class ProjectRestController {
     public @ResponseBody
     byte[] getProjectPicture(@PathVariable String code) throws IOException {
         return insightProjectService.getProjectPicture(code);
+    }
+
+    @GetMapping("{code}/fittingemployees")
+    public List<EmployeeRating> getProjectMatches(@PathVariable String code) {
+        Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
+                .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
+        List<Employee> allEmployees = insightEmployeeService.getEmployees();
+
+        Map<Employee, List<SkillExperience>> employeeSkills = allEmployees.stream()
+                .collect(Collectors.toMap(Function.identity(), skillService::getSkillsFor));
+        List<EmployeeRating> employeeRatings = new ArrayList<>();
+        employeeSkills.forEach((employee, skills) -> {
+            double rating = skills.stream()
+                    .filter(skill -> projectRatings
+                            .keySet()
+                            .contains(skill.getSkill()))
+                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
+                    .sum();
+            employeeRatings.add(new EmployeeRating(employee, rating));
+        });
+
+        return employeeRatings.stream()
+                .sorted(Comparator.comparing(EmployeeRating::getRating).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("{code}/skills")
+    public List<SkillRating> getProjectSkills(@PathVariable String code) {
+        Project project = insightProjectService.getProject(code);
+        List<Employee> employees = insightProjectService.getCurrentEmployeesFor(project);
+
+        Map<Skill, Long> skillCounts = employees.stream()
+                .flatMap(employee -> skillService.getSkillsFor(project, employee).stream())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        return skillCounts.entrySet().stream()
+                .map(entry -> new SkillRating(entry.getKey(), calculateSkillRating(employees, entry.getValue())))
+                .collect(Collectors.toList());
+    }
+
+    private double calculateSkillRating(List<Employee> employees, Long skillCount) {
+        return (double) skillCount / employees.size();
     }
 }

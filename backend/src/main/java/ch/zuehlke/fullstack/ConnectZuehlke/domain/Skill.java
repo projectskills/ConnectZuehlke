@@ -1,10 +1,8 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 public class Skill {
-
     private int id;
     private String name;
 
@@ -27,5 +25,19 @@ public class Skill {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Skill skill = (Skill) o;
+        return getId() == skill.getId() &&
+                Objects.equals(getName(), skill.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
     }
 }
