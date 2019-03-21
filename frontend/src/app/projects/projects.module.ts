@@ -4,7 +4,7 @@ import {CommonModule} from '@angular/common';
 import {ProjectsRoutingModule} from './projects-routing.module';
 import {ProjectsListComponent} from './projects-list/projects-list.component';
 import {
-  MatChipsModule,
+  MatChipsModule, MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
@@ -36,6 +36,7 @@ import { ProjectsDetailComponent } from './projects-detail/projects-detail.compo
     MatChipsModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
     }),
