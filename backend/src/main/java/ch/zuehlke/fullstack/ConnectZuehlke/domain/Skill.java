@@ -1,16 +1,15 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class Skill {
 
     private int id;
     private String name;
+    private int experience;
 
-    public Skill(int id, String name) {
+    public Skill(int id, String name, int experience) {
         this.id = id;
         this.name = name;
+        this.experience = experience;
     }
 
     public int getId() {
@@ -19,6 +18,10 @@ public class Skill {
 
     public String getName() {
         return name;
+    }
+
+    public int getExperience() {
+        return experience;
     }
 
     public void setId(int id) {

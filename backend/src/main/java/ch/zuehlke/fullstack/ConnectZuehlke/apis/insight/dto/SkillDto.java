@@ -8,20 +8,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SkillDto {
 
     @JsonProperty("Id")
-    private int Id;
+    private int id;
 
     @JsonProperty("Name")
-    private String Name;
+    private String name;
+
+    @JsonProperty("Experience")
+    private int experience;
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public String getName() {
-        return Name;
+        return name;
+    }
+
+    public int getExperience() {
+        return experience;
     }
 
     public Skill toSkill() {
-        return new Skill(getId(),getName());
+        return new Skill(getId(),getName(), getExperience());
     }
 }
