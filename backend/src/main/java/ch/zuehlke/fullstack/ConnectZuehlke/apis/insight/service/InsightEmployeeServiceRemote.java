@@ -3,6 +3,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.EmployeeDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -26,6 +27,7 @@ public class InsightEmployeeServiceRemote implements InsightEmployeeService {
         this.insightRestTemplate = insightRestTemplate;
     }
 
+    @Cacheable("employees")
     @Override
     public List<Employee> getEmployees() {
         ResponseEntity<List<EmployeeDto>> response = this.insightRestTemplate

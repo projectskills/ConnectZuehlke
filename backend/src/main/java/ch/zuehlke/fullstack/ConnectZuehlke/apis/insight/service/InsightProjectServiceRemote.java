@@ -3,6 +3,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.*;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
+import org.hibernate.annotations.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -63,6 +64,7 @@ public class InsightProjectServiceRemote implements InsightProjectService {
                 .collect(toList());
     }
 
+    @Cacheable("project_employees")
     @Override
     public List<Employee> getCurrentEmployeesFor(Project project) {
         String queryUrl = "/projects/" + project.getCode() + "/team/current";

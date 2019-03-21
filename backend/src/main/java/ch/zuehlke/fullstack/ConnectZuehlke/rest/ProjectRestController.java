@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -66,28 +67,40 @@ public class ProjectRestController {
     }
 
     @GetMapping("{code}/fittingemployees")
-    public List<EmployeeRating> getProjectMatches(@PathVariable String code) {
+    public List<EmployeeRating> getFittingEmployeesRanking(@PathVariable String code) {
+
         Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
                 .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
+
         List<Employee> allEmployees = insightEmployeeService.getEmployees();
 
-        Map<Employee, List<SkillExperience>> employeeSkills = allEmployees.stream()
-                .collect(Collectors.toMap(Function.identity(), skillService::getSkillsFor));
-        List<EmployeeRating> employeeRatings = new ArrayList<>();
-        employeeSkills.forEach((employee, skills) -> {
-            double rating = skills.stream()
-                    .filter(skill -> projectRatings
-                            .keySet()
-                            .contains(skill.getSkill()))
-                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
-                    .sum();
-            employeeRatings.add(new EmployeeRating(employee, rating));
-        });
+        Map<Employee, List<SkillExperience>> employeeSkills = getEmployeeSkills(allEmployees);
+        List<EmployeeRating> employeeRatings = calculateEmployeeRatings(projectRatings, employeeSkills);
 
         return employeeRatings.stream()
                 .sorted(Comparator.comparing(EmployeeRating::getRating).reversed())
                 .limit(10)
                 .collect(Collectors.toList());
+    }
+
+    private List<EmployeeRating> calculateEmployeeRatings(
+            Map<Skill, Double> projectRatings, Map<Employee, List<SkillExperience>> employeeSkills) {
+        List<EmployeeRating> employeeRatings = new ArrayList<>();
+        employeeSkills.forEach((employee, skills) -> {
+            List<SkillExperience> filteredSkills = skills.stream()
+                    .filter(skill -> projectRatings.keySet().contains(skill.getSkill()))
+                    .collect(Collectors.toList());
+            double rating = filteredSkills.stream()
+                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
+                    .sum();
+            employeeRatings.add(new EmployeeRating(employee, rating));
+        });
+        return employeeRatings;
+    }
+
+    private Map<Employee, List<SkillExperience>> getEmployeeSkills(List<Employee> allEmployees) {
+        return allEmployees.stream()
+                .collect(Collectors.toMap(Function.identity(), skillService::getPersistedSkillsFor));
     }
 
     @GetMapping("{code}/skills")

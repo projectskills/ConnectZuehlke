@@ -3,15 +3,15 @@ package ch.zuehlke.fullstack.ConnectZuehlke.domain;
 import java.util.Objects;
 
 public class Skill {
-    private int id;
+    private long id;
     private String name;
 
-    public Skill(int id, String name) {
+    public Skill(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -19,7 +19,7 @@ public class Skill {
         return name;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
