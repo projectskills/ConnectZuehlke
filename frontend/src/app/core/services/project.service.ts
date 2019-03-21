@@ -3,6 +3,7 @@ import {Observable, of} from 'rxjs';
 import {Project} from '../../shared/domain/Project';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
+import {SkillRating} from '../../shared/domain/SkillRating';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,32 @@ export class ProjectService {
   public getProject(projectId: string): Observable<Project> {
     return this.http.get<Project>(`/api/projects/${projectId}`)
       .pipe(catchError(this.handleError('getProject', null)));
+  }
+
+  public getProjectSkillRatings(projectId: string): Observable<SkillRating[]> {
+    return of<SkillRating[]>([
+      {
+        skill: {
+          name: 'Java',
+          id: 'id123'
+        },
+        rating: 0.6
+      },
+      {
+        skill: {
+          name: 'Springboot',
+          id: 'id153'
+        },
+        rating: 0.2
+      },
+      {
+        skill: {
+          name: 'Angular',
+          id: 'id163'
+        },
+        rating: 0.2
+      }
+    ]);
   }
 
   /**
