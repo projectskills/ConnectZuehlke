@@ -7,12 +7,26 @@ import {ChartData} from '../../shared/domain/ChartData';
   styleUrls: ['./projects-charts.component.scss']
 })
 export class ProjectsChartsComponent {
-  @Input() chartData: ChartData[];
+  _chartData: ChartData[];
+  get chartData(): ChartData[] {
+    return this._chartData;
+  }
+
+  @Input('chartData')
+  set chartData(value: ChartData[]) {
+    this._chartData = value
+      .sort((a, b) => b.value - a.value)
+      .map(chartData => ({value: chartData.value * 100, name: chartData.name}) as ChartData);
+  }
 
   public colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C']
   };
 
   public view = [700, 200];
+
+  public getPartialChartData(length: number): ChartData[] {
+    return this.chartData.slice(0, length);
+  }
 
 }
