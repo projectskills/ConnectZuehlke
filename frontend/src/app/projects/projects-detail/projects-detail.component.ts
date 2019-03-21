@@ -16,11 +16,7 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
   project$: Observable<Project>;
   projectLoading = true;
 
-  view = [700, 200];
-  results$: Observable<ChartData[]>;
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C']
-  };
+  chartData$: Observable<ChartData[]>;
 
   constructor(private route: ActivatedRoute,
               private projectService: ProjectService) {
@@ -33,7 +29,7 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
         .pipe(tap(() => this.projectLoading = false));
     });
 
-    this.results$ = this.projectService.getProjectSkillRatings('test').pipe(
+    this.chartData$ = this.projectService.getProjectSkillRatings('test').pipe(
       map(skillRating => {
         return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
       })
