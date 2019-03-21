@@ -13,6 +13,7 @@ import {ChartData} from '../../shared/domain/ChartData';
 })
 export class ProjectsDetailComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription;
+  private projectId: string;
   project$: Observable<Project>;
   projectLoading = true;
 
@@ -24,12 +25,12 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions = this.route.params.subscribe(params => {
-      const projectId = params.projectId;
-      this.project$ = this.projectService.getProject(projectId)
+      this.projectId = params.projectId;
+      this.project$ = this.projectService.getProject(this.projectId)
         .pipe(tap(() => this.projectLoading = false));
     });
 
-    this.chartData$ = this.projectService.getProjectSkillRatings('test').pipe(
+    this.chartData$ = this.projectService.getProjectSkillRatings(this.projectId).pipe(
       map(skillRating => {
         return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
       })
