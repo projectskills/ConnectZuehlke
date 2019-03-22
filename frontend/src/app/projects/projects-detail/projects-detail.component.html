@@ -22,8 +22,7 @@
       </mat-chip-list>
     </div>
     <mat-accordion>
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
             Description
@@ -32,7 +31,8 @@
         {{ project.description || 'No description provided.'}}
       </mat-expansion-panel>
     </mat-accordion>
-    <div *ngIf="chartLoading, else chart">
+    <h4>Skills used</h4>
+    <div *ngIf="chartLoading">
       <p>Loading...</p>
       <mat-spinner></mat-spinner>
     </div>

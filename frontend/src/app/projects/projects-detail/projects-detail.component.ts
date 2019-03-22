@@ -12,7 +12,7 @@ import {ChartData} from '../../shared/domain/ChartData';
   styleUrls: ['./projects-detail.component.scss']
 })
 export class ProjectsDetailComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription;
+  private subscription: Subscription;
   private projectId: string;
   project$: Observable<Project>;
   projectLoading = true;
@@ -25,21 +25,20 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptions = this.route.params.subscribe(params => {
+    this.subscription = this.route.params.subscribe(params => {
       this.projectId = params.projectId;
       this.project$ = this.projectService.getProject(this.projectId)
         .pipe(tap(() => this.projectLoading = false));
+      this.chartData$ = this.projectService.getProjectSkillRatings(this.projectId).pipe(
+        tap(() => this.chartLoading = false),
+        map(skillRating => {
+          return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
+        })
+      );
     });
-
-    this.chartData$ = this.projectService.getProjectSkillRatings(this.projectId).pipe(
-      tap(() => this.chartLoading = false),
-      map(skillRating => {
-        return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
-      })
-    );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
