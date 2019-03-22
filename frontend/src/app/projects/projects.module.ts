@@ -19,7 +19,7 @@ import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image
 import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { ProjectsChartsComponent } from './projects-charts/projects-charts.component';
-import { ProjectFittingEmployeesListComponent } from './project-fitting-employees-table/project-fitting-employees-list.component';
+import { ProjectFittingEmployeesTableComponent } from './project-fitting-employees-table/project-fitting-employees-table.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { ProjectFittingEmployeesListComponent } from './project-fitting-employee
     ProjectCardsComponent,
     ProjectsDetailComponent,
     ProjectsChartsComponent,
-    ProjectFittingEmployeesListComponent
+    ProjectFittingEmployeesTableComponent
   ],
   imports: [
     CommonModule,
