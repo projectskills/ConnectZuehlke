@@ -1,0 +1,13 @@
+<div class="main-container">
+  <h1>A list of all Zühlke Projects</h1>
+
+  <mat-form-field>
+    <input matInput [(ngModel)]="searchQuery" placeholder="Type something to search">
+  </mat-form-field>
+
+  <div *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <app-project-cards [projects]="(projects | async) | search:'name':searchQuery" (projectClicked)="cardClicked($event)"></app-project-cards>
+</div>
+

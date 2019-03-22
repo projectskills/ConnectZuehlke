@@ -20,7 +20,11 @@ repositories {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.h2database:h2'
     implementation 'org.apache.httpcomponents:httpclient'
+
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'commons-io:commons-io:2.6'

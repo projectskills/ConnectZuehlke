@@ -1,0 +1,16 @@
+@import '../../../variables';
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-form-field {
+  width: 20em;
+}
+
+h1 {
+  text-align: center;
+  color: $zuehlke_accent;
+}

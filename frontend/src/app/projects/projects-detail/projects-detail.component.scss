@@ -1,0 +1,61 @@
+@import '../../../variables';
+
+.main-container {
+  display: flex;
+
+  h1 {
+    text-align: center;
+    color: $zuehlke_accent;
+    flex-grow: 1;
+  }
+
+  .loading-container {
+    margin: auto;
+  }
+
+  .project-container {
+    display: flex;
+    flex: 1 1;
+    margin: 0 5%;
+    flex-direction: column;
+
+    .mat-accordion {
+      margin-bottom: 1.5em;
+    }
+  }
+}
+
+.employee-number {
+  display: flex;
+  align-items: center;
+  margin: 1em 0;
+
+  .mat-icon {
+    margin-right: 0.25em
+  }
+
+  .mat-chip-list {
+    margin-left: 1em;
+  }
+}
+
+
+.back-link {
+  display: flex;
+  align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+  }
+
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+
+}
