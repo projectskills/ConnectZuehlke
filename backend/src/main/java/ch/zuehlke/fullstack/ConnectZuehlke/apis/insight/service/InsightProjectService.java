@@ -14,8 +14,8 @@ public interface InsightProjectService {
     }
 
     Project getProject(String code);
-    List<Project> getCurrentProjectsFor(Employee employee);
-    List<Employee> getCurrentEmployeesFor(Project project);
-    byte[] getProjectPicture(String projectCode) throws IOException;
 
+    List<Employee> getCurrentEmployeesFor(Project project);
+
+    byte[] getProjectPicture(String projectCode) throws IOException;
 }

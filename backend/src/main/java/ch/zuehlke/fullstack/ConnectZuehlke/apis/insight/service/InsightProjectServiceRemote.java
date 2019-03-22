@@ -1,6 +1,5 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 
-import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.CurrentProjectDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.EmployeeDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ProjectDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.TeamMemberDto;
@@ -8,8 +7,6 @@ import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,7 +28,6 @@ import static org.springframework.http.HttpMethod.GET;
 @Service
 @Profile({"prod", "staging"})
 public class InsightProjectServiceRemote implements InsightProjectService {
-    private Logger logger = LoggerFactory.getLogger(InsightProjectServiceRemote.class);
     private final RestTemplate insightRestTemplate;
     private final ProjectRepository projectRepository;
     private static final List<String> PROJECTS = Arrays.asList(
@@ -105,16 +101,6 @@ public class InsightProjectServiceRemote implements InsightProjectService {
         Project project = response.getBody().toProject();
         project.setTeamSize(getCurrentEmployeesFor(project).size());
         return project;
-    }
-
-    @Override
-    public List<Project> getCurrentProjectsFor(Employee employee) {
-        ResponseEntity<List<CurrentProjectDto>> response = this.insightRestTemplate
-                .exchange("/employees/" + employee.getCode() + "/projects/current", GET, null, new ParameterizedTypeReference<List<CurrentProjectDto>>() {
-                });
-        return response.getBody().stream().map(CurrentProjectDto::getProject)
-                .map(ProjectDto::toProject)
-                .collect(toList());
     }
 
     @Cacheable("project_employees")

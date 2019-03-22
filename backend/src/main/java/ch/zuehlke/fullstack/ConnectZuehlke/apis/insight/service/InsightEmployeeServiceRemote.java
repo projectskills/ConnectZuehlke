@@ -21,7 +21,6 @@ import static org.springframework.http.HttpMethod.GET;
 public class InsightEmployeeServiceRemote implements InsightEmployeeService {
     private final RestTemplate insightRestTemplate;
 
-
     @Autowired
     public InsightEmployeeServiceRemote(RestTemplate insightRestTemplate) {
         this.insightRestTemplate = insightRestTemplate;

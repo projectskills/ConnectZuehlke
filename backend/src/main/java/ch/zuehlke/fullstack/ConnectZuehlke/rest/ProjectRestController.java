@@ -6,12 +6,14 @@ import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillServ
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
