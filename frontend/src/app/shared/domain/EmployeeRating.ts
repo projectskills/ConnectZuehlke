@@ -1,4 +1,4 @@
-import {Employee} from "./Employee";
+import {Employee} from './Employee';
 
 export interface EmployeeRating {
   employee: Employee;

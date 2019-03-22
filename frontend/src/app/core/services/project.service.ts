@@ -4,8 +4,7 @@ import {Project} from '../../shared/domain/Project';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {SkillRating} from '../../shared/domain/SkillRating';
-import {Employee} from "../../shared/domain/Employee";
-import {EmployeeRating} from "../../shared/domain/EmployeeRating";
+import {EmployeeRating} from '../../shared/domain/EmployeeRating';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +31,7 @@ export class ProjectService {
 
   public getProjectFittingEmployees(projectId: string): Observable<EmployeeRating[]> {
     return this.http.get<EmployeeRating[]>(`api/projects/${projectId}/fittingemployees`)
-      .pipe(catchError(this.handleError('getProjectFittingEmployees', [])))
+      .pipe(catchError(this.handleError('getProjectFittingEmployees', [])));
   }
 
   /**
