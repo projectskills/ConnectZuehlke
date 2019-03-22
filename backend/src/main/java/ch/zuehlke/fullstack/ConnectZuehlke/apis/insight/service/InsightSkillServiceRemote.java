@@ -7,7 +7,7 @@ import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Skill;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.SkillExperience;
-import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeEnitity;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeEntity;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
@@ -53,13 +53,13 @@ public class InsightSkillServiceRemote implements InsightSkillService {
                 .orElse(Collections.emptyList())).orElse(Collections.emptyList());
     }
 
-    private Optional<EmployeeEnitity> getEmployeeEntity(Employee employee) {
+    private Optional<EmployeeEntity> getEmployeeEntity(Employee employee) {
         return employeeRepository.findByCode(employee.getCode()).stream().findFirst();
     }
 
     @Override
     public List<SkillExperience> getPersistedSkillsFor(Employee employee) {
-        Optional<EmployeeEnitity> employeeEntity = getEmployeeEntity(employee);
+        Optional<EmployeeEntity> employeeEntity = getEmployeeEntity(employee);
 
         return employeeEntity
                 .map(employeeEnitity -> employeeEnitity.getSkills().stream()

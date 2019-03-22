@@ -4,7 +4,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.rest;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
-import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeEnitity;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeEntity;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeRepository;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeSkill;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeSkillRepository;
@@ -54,17 +54,17 @@ public class EmployeeRestController {
     public void persistEmployeeSkills() {
         List<Employee> employees = employeeService.getEmployees();
 
-        List<EmployeeEnitity> employeeEntities = employees.stream()
+        List<EmployeeEntity> employeeEntities = employees.stream()
                 .map(this::toEmployeeEntity)
                 .collect(Collectors.toList());
 
         employeeRepository.saveAll(employeeEntities);
     }
 
-    private EmployeeEnitity toEmployeeEntity(Employee employee) {
+    private EmployeeEntity toEmployeeEntity(Employee employee) {
         List<EmployeeSkill> employeeSkills = getEmployeeSkills(employee);
         employeeSkillRepository.saveAll(employeeSkills);
-        return new EmployeeEnitity(employee.getCode(), employeeSkills);
+        return new EmployeeEntity(employee.getCode(), employeeSkills);
     }
 
     private List<EmployeeSkill> getEmployeeSkills(Employee employee) {

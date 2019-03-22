@@ -16,25 +16,20 @@ import static java.util.Arrays.asList;
 @Profile({"ci", "default"})
 public class InsightProjectServiceMocked implements InsightProjectService{
 
-    public static final List<Project> PROJECTS = asList(
-            new Project("1", "Ergon", "some description"),
-            new Project("2", "iTrain", "blabla"),
-            new Project("3", "SwissLife", "some desc")
+    private static final List<Project> PROJECTS = asList(
+            new Project("1", "Ergon", "some description", 3),
+            new Project("2", "iTrain", "blabla", 3),
+            new Project("3", "SwissLife", "some desc", 3)
     );
 
     @Override
-    public List<Project> getProjects() {
+    public List<Project> getRunningProjects() {
         return PROJECTS;
     }
 
     @Override
     public Project getProject(String code) {
         return PROJECTS.stream().filter(project -> project.getCode().equals(code)).findFirst().orElse(null);
-    }
-
-    @Override
-    public List<Project> getCurrentProjectsFor(Employee employee) {
-        return PROJECTS;
     }
 
     @Override

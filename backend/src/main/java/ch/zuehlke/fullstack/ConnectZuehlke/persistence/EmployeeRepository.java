@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface EmployeeRepository extends CrudRepository<EmployeeEnitity, Long> {
-    List<EmployeeEnitity> findByCode(String code);
+public interface EmployeeRepository extends CrudRepository<EmployeeEntity, Long> {
+    List<EmployeeEntity> findByCode(String code);
 }
