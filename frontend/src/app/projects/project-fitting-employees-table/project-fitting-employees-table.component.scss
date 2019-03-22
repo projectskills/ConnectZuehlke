@@ -1,6 +1,18 @@
+@import '../../../variables';
+
 .container {
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
   margin-bottom: 2em;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+}
+
+th {
+  background-color: $zuehlke_primary;
+  color: white;
+  font-weight: bold;
 }
