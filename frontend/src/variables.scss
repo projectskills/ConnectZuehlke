@@ -1,0 +1,9 @@
+@import '~@angular/material/theming';
+@import 'zuehlke_palette';
+
+$zuehlke-app-primary: mat-palette($zuehlke_primary_palette);
+$zuehlke-app-accent: mat-palette($zuehlke_accent_palette);
+
+$zuehlke_primary: mat-color($zuehlke-app-primary);
+$zuehlke_accent: mat-color($zuehlke-app-accent);
+

@@ -10,4 +10,9 @@ import java.util.List;
 public interface InsightSkillService {
     List<Skill> getSkillsFor(Project project, Employee employee);
     List<SkillExperience> getSkillsFor(Employee employee);
+
+    default List<SkillExperience> getPersistedSkillsFor(Employee employee) {
+        // overwrite this to get persisted data
+        return getSkillsFor(employee);
+    }
 }

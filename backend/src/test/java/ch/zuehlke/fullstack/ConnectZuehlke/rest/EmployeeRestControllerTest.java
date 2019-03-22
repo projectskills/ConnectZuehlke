@@ -1,7 +1,10 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.rest;
 
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeService;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeRepository;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.EmployeeSkillRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,16 @@ public class EmployeeRestControllerTest {
 
     @MockBean
     private InsightEmployeeService employeeService;
+
+    @MockBean
+    private EmployeeRepository repository;
+
+    @MockBean
+    private EmployeeSkillRepository employeeSkillRepository;
+
+    @MockBean
+    private InsightSkillService insightSkillService;
+
 
     @Test
     public void testGetEmptyUsers() throws Exception {

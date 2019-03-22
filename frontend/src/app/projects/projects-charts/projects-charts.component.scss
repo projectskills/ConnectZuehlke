@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+::ng-deep div.mat-tab-body-wrapper{
+  margin-top: 1em;
+}

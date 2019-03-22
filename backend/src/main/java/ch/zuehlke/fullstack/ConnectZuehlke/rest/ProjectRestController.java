@@ -4,48 +4,48 @@ import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeS
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightProjectService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectRestController {
-    private static final List<String> PROJECTS = Arrays.asList(
-            "C23438", // SNB PRIMA
-            "C23439", // SNB EASYR
-            "C23440", // SNB ESIP
-            "C22520", // SCS COMS
-            "C22520", // SCS IAM
-            "C23719", // SCS P2S
-            "C23782", // VONTOBEL sky
-            "C23781", // VONTOBEL RM
-            "C23410", // SBB PRED MAINT
-            "C23226", // SBB ETR610
-            "C19834", // SBB automat
-            "C23043" // CONCORDIA mobile app
-    );
     private final InsightProjectService insightProjectService;
     private final InsightEmployeeService insightEmployeeService;
     private final InsightSkillService skillService;
+    private final ProjectRepository projectRepository;
 
-    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService) {
+    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightSkillService skillService, ProjectRepository projectRepository) {
         this.insightProjectService = insightProjectService;
-        this.insightEmployeeService = insightEmployeeService1;
+        this.insightEmployeeService = insightEmployeeService;
         this.skillService = skillService;
+        this.projectRepository = projectRepository;
     }
 
     @GetMapping("")
     public List<Project> getProjects() {
-        return PROJECTS.stream()
-                .map(insightProjectService::getProject)
-                .collect(Collectors.toList());
+        return insightProjectService.getPersistedRunningProjects();
     }
 
+    @GetMapping("persist")
+    public void persistProjects() {
+        List<Project> runningProjects = insightProjectService.getRunningProjects();
+        List<ProjectEntity> projectEntities = runningProjects.stream()
+                .map(ProjectEntity::fromProject)
+                .collect(Collectors.toList());
+
+        projectRepository.saveAll(projectEntities);
+    }
 
     @GetMapping("{code}")
     public Project getProject(@PathVariable String code) {
@@ -67,28 +67,43 @@ public class ProjectRestController {
     }
 
     @GetMapping("{code}/fittingemployees")
-    public List<EmployeeRating> getProjectMatches(@PathVariable String code) {
+    public List<EmployeeRating> getFittingEmployeesRanking(@PathVariable String code) {
+
         Map<Skill, Double> projectRatings = getProjectSkills(code).stream()
                 .collect(Collectors.toMap(SkillRating::getSkill, SkillRating::getRating));
+
         List<Employee> allEmployees = insightEmployeeService.getEmployees();
 
-        Map<Employee, List<SkillExperience>> employeeSkills = allEmployees.stream()
-                .collect(Collectors.toMap(Function.identity(), skillService::getSkillsFor));
-        List<EmployeeRating> employeeRatings = new ArrayList<>();
-        employeeSkills.forEach((employee, skills) -> {
-            double rating = skills.stream()
-                    .filter(skill -> projectRatings
-                            .keySet()
-                            .contains(skill.getSkill()))
-                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
-                    .sum();
-            employeeRatings.add(new EmployeeRating(employee, rating));
-        });
+        Map<Employee, List<SkillExperience>> employeeSkills = getEmployeeSkills(allEmployees);
+        List<EmployeeRating> employeeRatings = calculateEmployeeRatings(projectRatings, employeeSkills);
 
         return employeeRatings.stream()
                 .sorted(Comparator.comparing(EmployeeRating::getRating).reversed())
                 .limit(10)
                 .collect(Collectors.toList());
+    }
+
+    private List<EmployeeRating> calculateEmployeeRatings(
+            Map<Skill, Double> projectRatings, Map<Employee, List<SkillExperience>> employeeSkills) {
+        List<EmployeeRating> employeeRatings = new ArrayList<>();
+        employeeSkills.forEach((employee, skills) -> {
+            List<SkillExperience> filteredSkills = skills.stream()
+                    .filter(skill -> projectRatings.keySet().contains(skill.getSkill()))
+                    .collect(Collectors.toList());
+            double rating = filteredSkills.stream()
+                    .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
+                    .sum();
+
+            if (rating > 0) {
+                employeeRatings.add(new EmployeeRating(employee, rating));
+            }
+        });
+        return employeeRatings;
+    }
+
+    private Map<Employee, List<SkillExperience>> getEmployeeSkills(List<Employee> allEmployees) {
+        return allEmployees.stream()
+                .collect(Collectors.toMap(Function.identity(), skillService::getPersistedSkillsFor));
     }
 
     @GetMapping("{code}/skills")
