@@ -1,24 +1,28 @@
 <div class="container">
-  <h4>Usage of project skills</h4>
-  <mat-tab-group mat-align-tabs="center">
-    <mat-tab label="Top 4 skills">
-      <div id="chart">
-        <ngx-charts-bar-horizontal
-          [scheme]="colorScheme"
-          [results]="getPartialChartData(4)"
-          [yAxis]="true"
-          [xScaleMax]="100"
-          [xAxis]="true"
-          [showDataLabel]="true">
-        </ngx-charts-bar-horizontal>
-      </div>
-    </mat-tab>
-    <mat-tab label="All skills">
-      <mat-chip-list>
-        <mat-chip color="primary" *ngFor="let skill of chartData">{{ skill.name }}
-          - {{ skill.value.toFixed(0) }}%
-        </mat-chip>
-      </mat-chip-list>
-    </mat-tab>
-  </mat-tab-group>
+  <h4>Skills used</h4>
+  <div *ngIf="chartData.length === 0, else showChart">
+    No skills used for this project.
+  </div>
+  <ng-template #showChart>
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Top 4 skills">
+        <div id="chart">
+          <ngx-charts-bar-horizontal
+            [scheme]="colorScheme"
+            [results]="getPartialChartData(4)"
+            [yAxis]="true"
+            [xScaleMax]="100"
+            [xAxis]="true">
+          </ngx-charts-bar-horizontal>
+        </div>
+      </mat-tab>
+      <mat-tab label="All skills">
+        <mat-chip-list>
+          <mat-chip color="primary" *ngFor="let skill of chartData">{{ skill.name }}
+            - {{ skill.value.toFixed(0) }}%
+          </mat-chip>
+        </mat-chip-list>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
 </div>

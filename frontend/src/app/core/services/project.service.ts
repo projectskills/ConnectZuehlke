@@ -24,8 +24,8 @@ export class ProjectService {
   }
 
   public getProjectSkillRatings(projectId: string): Observable<SkillRating[]> {
-    return this.http.get<SkillRating>(`/api/projects/${projectId}/skills`)
-      .pipe(catchError(this.handleError('getProjectSkillRatings', null)));
+    return this.http.get<SkillRating[]>(`/api/projects/${projectId}/skills`)
+      .pipe(catchError(this.handleError('getProjectSkillRatings', [])));
   }
 
   /**

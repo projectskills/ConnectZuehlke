@@ -8,14 +8,14 @@ import {ChartData} from '../../shared/domain/ChartData';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsChartsComponent {
-  _chartData: ChartData[];
+  private pchartData: ChartData[];
   get chartData(): ChartData[] {
-    return this._chartData;
+    return this.pchartData;
   }
 
   @Input('chartData')
   set chartData(chartData: ChartData[]) {
-    this._chartData = (chartData || [])
+    this.pchartData = (chartData || [])
       .sort((a, b) => b.value - a.value)
       .map(data => ({value: data.value * 100, name: data.name}) as ChartData);
   }

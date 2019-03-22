@@ -16,6 +16,7 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
   private projectId: string;
   project$: Observable<Project>;
   projectLoading = true;
+  chartLoading = true;
 
   chartData$: Observable<ChartData[]>;
 
@@ -31,6 +32,7 @@ export class ProjectsDetailComponent implements OnInit, OnDestroy {
     });
 
     this.chartData$ = this.projectService.getProjectSkillRatings(this.projectId).pipe(
+      tap(() => this.chartLoading = false),
       map(skillRating => {
         return skillRating.map(result => ({name: result.skill.name, value: result.rating} as ChartData));
       })

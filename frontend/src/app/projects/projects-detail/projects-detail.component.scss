@@ -6,6 +6,7 @@
   h1 {
     text-align: center;
     color: $zuehlke_accent;
+    flex-grow: 1;
   }
 
   .loading-container {
@@ -36,4 +37,25 @@
   .mat-chip-list {
     margin-left: 1em;
   }
+}
+
+
+.back-link {
+  display: flex;
+  align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+  }
+
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+
 }

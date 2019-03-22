@@ -4,7 +4,14 @@
     <mat-spinner></mat-spinner>
   </div>
   <div class="project-container" *ngIf="project$ | async as project">
-    <h1>{{ project.code }} - {{ project.name }}</h1>
+    <div class="title-container">
+      <div class="back-link">
+        <a [routerLink]="['/projects']">
+          <mat-icon>navigate_before</mat-icon> Back
+        </a>
+      </div>
+      <h1>{{ project.code }} - {{ project.name }}</h1>
+    </div>
     <h3>Info</h3>
     <mat-divider></mat-divider>
     <div class="employee-number">
@@ -25,8 +32,12 @@
         {{ project.description || 'No description provided.'}}
       </mat-expansion-panel>
     </mat-accordion>
-    <h3>Stats</h3>
-    <mat-divider></mat-divider>
-    <app-projects-charts [chartData]="chartData$ | async"></app-projects-charts>
+    <div *ngIf="chartLoading, else chart">
+      <p>Loading...</p>
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="chartData$ | async as chartData">
+      <app-projects-charts [chartData]="chartData"></app-projects-charts>
+    </div>
   </div>
 </div>
