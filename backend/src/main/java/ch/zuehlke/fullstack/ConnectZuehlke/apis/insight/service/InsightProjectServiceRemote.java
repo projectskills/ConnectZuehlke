@@ -2,11 +2,12 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.CurrentProjectDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.EmployeeDto;
-import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ListDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ProjectDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.TeamMemberDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import static ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.PhaseDto.PHASE_STATE_SOLD;
 import static java.util.Collections.singletonList;
@@ -26,29 +29,52 @@ import static org.springframework.http.HttpMethod.GET;
 @Service
 @Profile({"prod", "staging"})
 public class InsightProjectServiceRemote implements InsightProjectService {
-    private final RestTemplate insightRestTemplate;
     private Logger logger = LoggerFactory.getLogger(InsightProjectServiceRemote.class);
+    private final RestTemplate insightRestTemplate;
+    private final ProjectRepository projectRepository;
 
-    public InsightProjectServiceRemote(RestTemplate insightRestTemplate) {
+    public InsightProjectServiceRemote(RestTemplate insightRestTemplate, ProjectRepository projectRepository) {
         this.insightRestTemplate = insightRestTemplate;
+        this.projectRepository = projectRepository;
+    }
+
+    @Override
+    public List<Project> getRunningProjects() {
+        ResponseEntity<List<ProjectDto>> response = this.insightRestTemplate
+                .exchange("/projects?salesstates=2&desc=true", GET, null, new ParameterizedTypeReference<List<ProjectDto>>() {
+                });
+
+        List<Project> projects = response.getBody().stream()
+                .map(ProjectDto::toProject)
+                .filter(project -> project.getCode().startsWith("C"))
+                .filter(project -> project.getName() != null)
+                .limit(200)
+                .collect(toList());
+
+        projects.forEach(project -> project.setTeamSize(getCurrentEmployeesFor(project).size()));
+        return projects.stream()
+                .filter(project -> project.getTeamSize() > 0)
+                .collect(toList());
+
     }
 
     @Override
     @Cacheable("projects")
-    public List<Project> getProjects() {
-        ResponseEntity<ListDto<ProjectDto>> response = this.insightRestTemplate
-                .exchange("/projects", GET, null, new ParameterizedTypeReference<ListDto<ProjectDto>>() {
-                });
-
-        logger.info("Counted in Response: " + response.getBody().getItems().size());
-        return response.getBody().getItems().stream()
-                .map(ProjectDto::toProject)
-                .collect(toList());
+    public List<Project> getPersistedRunningProjects() {
+        Iterable<ProjectEntity> projects = projectRepository.findAll();
+        return StreamSupport.stream(projects.spliterator(), false)
+            .map(ProjectEntity::toProject)
+            .collect(toList());
     }
 
     @Override
     @Cacheable("projects")
     public Project getProject(String code) {
+        Optional<ProjectEntity> projectEntity = projectRepository.findById(code);
+        if (projectEntity.isPresent()) {
+            return projectEntity.get().toProject();
+        }
+
         ResponseEntity<ProjectDto> response = this.insightRestTemplate
                 .getForEntity("/projects/" + code, ProjectDto.class);
 

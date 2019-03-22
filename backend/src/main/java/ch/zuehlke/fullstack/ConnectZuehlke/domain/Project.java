@@ -12,6 +12,11 @@ public class Project {
         this.description = description;
     }
 
+    public Project(String code, String name, String description, int teamSize) {
+        this(code, name, description);
+        this.teamSize = teamSize;
+    }
+
     public String getDescription() {
         return description;
     }

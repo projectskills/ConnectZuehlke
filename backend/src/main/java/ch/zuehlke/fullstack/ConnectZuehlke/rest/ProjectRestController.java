@@ -4,6 +4,8 @@ import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeS
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightProjectService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
+import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -34,18 +35,33 @@ public class ProjectRestController {
     private final InsightProjectService insightProjectService;
     private final InsightEmployeeService insightEmployeeService;
     private final InsightSkillService skillService;
+    private final ProjectRepository projectRepository;
 
-    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService) {
+    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService, ProjectRepository projectRepository) {
         this.insightProjectService = insightProjectService;
         this.insightEmployeeService = insightEmployeeService1;
         this.skillService = skillService;
+        this.projectRepository = projectRepository;
     }
 
     @GetMapping("")
     public List<Project> getProjects() {
-        return PROJECTS.stream()
+        List<Project> runningProjects = insightProjectService.getPersistedRunningProjects();
+        List<Project> staticProjects = PROJECTS.stream()
                 .map(insightProjectService::getProject)
                 .collect(Collectors.toList());
+        runningProjects.addAll(staticProjects);
+        return runningProjects;
+    }
+
+    @GetMapping("persist")
+    public void persistProjects() {
+        List<Project> runningProjects = insightProjectService.getRunningProjects();
+        List<ProjectEntity> projectEntities = runningProjects.stream()
+                .map(ProjectEntity::fromProject)
+                .collect(Collectors.toList());
+
+        projectRepository.saveAll(projectEntities);
     }
 
     @GetMapping("{code}")
@@ -94,7 +110,10 @@ public class ProjectRestController {
             double rating = filteredSkills.stream()
                     .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
                     .sum();
-            employeeRatings.add(new EmployeeRating(employee, rating));
+
+            if (rating > 0) {
+                employeeRatings.add(new EmployeeRating(employee, rating));
+            }
         });
         return employeeRatings;
     }

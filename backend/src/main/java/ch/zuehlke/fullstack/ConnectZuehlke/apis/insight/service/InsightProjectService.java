@@ -7,7 +7,12 @@ import java.io.IOException;
 import java.util.List;
 
 public interface InsightProjectService {
-    List<Project> getProjects();
+    List<Project> getRunningProjects();
+
+    default List<Project> getPersistedRunningProjects() {
+        return getRunningProjects();
+    }
+
     Project getProject(String code);
     List<Project> getCurrentProjectsFor(Employee employee);
     List<Employee> getCurrentEmployeesFor(Project project);

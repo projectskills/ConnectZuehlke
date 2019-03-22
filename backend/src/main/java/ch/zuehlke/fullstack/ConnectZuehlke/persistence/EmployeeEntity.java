@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class EmployeeEnitity {
+public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,10 +23,10 @@ public class EmployeeEnitity {
         return skills;
     }
 
-    public EmployeeEnitity() {
+    public EmployeeEntity() {
     }
 
-    public EmployeeEnitity(String code, List<EmployeeSkill> skills) {
+    public EmployeeEntity(String code, List<EmployeeSkill> skills) {
         this.code = code;
         this.skills = skills;
     }

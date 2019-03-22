@@ -3,15 +3,14 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 @JsonIgnoreProperties
 public class ProjectDto {
 
     @JsonProperty("Code")
     private String code;
-    @JsonProperty("Name")
-    private String name;
+    @JsonProperty("Title")
+    private String title;
     @JsonProperty("Description")
     private String description;
 
@@ -19,8 +18,8 @@ public class ProjectDto {
         return code;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getDescription() {
@@ -30,7 +29,7 @@ public class ProjectDto {
     public Project toProject() {
         return new Project(
                 getCode(),
-                getName(),
+                getTitle(),
                 getDescription()
         );
     }

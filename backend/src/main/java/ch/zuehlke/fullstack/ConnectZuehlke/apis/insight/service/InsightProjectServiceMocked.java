@@ -23,7 +23,7 @@ public class InsightProjectServiceMocked implements InsightProjectService{
     );
 
     @Override
-    public List<Project> getProjects() {
+    public List<Project> getRunningProjects() {
         return PROJECTS;
     }
 
