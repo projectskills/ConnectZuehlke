@@ -2,10 +2,10 @@ package ch.zuehlke.fullstack.ConnectZuehlke.domain;
 
 public class EmployeeRating {
     private Employee employee;
-    private Double rating;
+    private int rating;
 
 
-    public EmployeeRating(Employee employee, Double rating) {
+    public EmployeeRating(Employee employee, int rating) {
         this.employee = employee;
         this.rating = rating;
     }
@@ -14,7 +14,7 @@ public class EmployeeRating {
         return employee;
     }
 
-    public Double getRating() {
+    public int getRating() {
         return rating;
     }
 }

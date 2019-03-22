@@ -94,11 +94,16 @@ public class ProjectRestController {
                     .mapToDouble(skill -> skill.getExperience() * projectRatings.get(skill.getSkill()))
                     .sum();
 
-            if (rating > 0) {
-                employeeRatings.add(new EmployeeRating(employee, rating));
+            int adjustedRating = getAdjustedRating(rating);
+            if (adjustedRating > 0) {
+                employeeRatings.add(new EmployeeRating(employee, adjustedRating));
             }
         });
         return employeeRatings;
+    }
+
+    private int getAdjustedRating(double rating) {
+        return (int) (rating * 100);
     }
 
     private Map<Employee, List<SkillExperience>> getEmployeeSkills(List<Employee> allEmployees) {
