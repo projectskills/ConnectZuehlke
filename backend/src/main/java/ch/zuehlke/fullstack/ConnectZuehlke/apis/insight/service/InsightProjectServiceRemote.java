@@ -17,8 +17,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.PhaseDto.PHASE_STATE_SOLD;
@@ -32,6 +34,20 @@ public class InsightProjectServiceRemote implements InsightProjectService {
     private Logger logger = LoggerFactory.getLogger(InsightProjectServiceRemote.class);
     private final RestTemplate insightRestTemplate;
     private final ProjectRepository projectRepository;
+    private static final List<String> PROJECTS = Arrays.asList(
+            "C23438", // SNB PRIMA
+            "C23439", // SNB EASYR
+            "C23440", // SNB ESIP
+            "C22520", // SCS COMS
+            "C21844", // SCS IAM
+            "C23719", // SCS P2S
+            "C23782", // VONTOBEL sky
+            "C23781", // VONTOBEL RM
+            "C23410", // SBB PRED MAINT
+            "C23226", // SBB ETR610
+            "C19834", // SBB automat
+            "C23043" // CONCORDIA mobile app
+    );
 
     public InsightProjectServiceRemote(RestTemplate insightRestTemplate, ProjectRepository projectRepository) {
         this.insightRestTemplate = insightRestTemplate;
@@ -52,10 +68,18 @@ public class InsightProjectServiceRemote implements InsightProjectService {
                 .collect(toList());
 
         projects.forEach(project -> project.setTeamSize(getCurrentEmployeesFor(project).size()));
-        return projects.stream()
+
+        List<Project> runningProjects = projects.stream()
                 .filter(project -> project.getTeamSize() > 0)
                 .collect(toList());
 
+        List<Project> staticProjects = PROJECTS.stream()
+                .map(this::getProject)
+                .collect(Collectors.toList());
+
+        runningProjects.addAll(staticProjects);
+
+        return runningProjects;
     }
 
     @Override
@@ -63,8 +87,8 @@ public class InsightProjectServiceRemote implements InsightProjectService {
     public List<Project> getPersistedRunningProjects() {
         Iterable<ProjectEntity> projects = projectRepository.findAll();
         return StreamSupport.stream(projects.spliterator(), false)
-            .map(ProjectEntity::toProject)
-            .collect(toList());
+                .map(ProjectEntity::toProject)
+                .collect(toList());
     }
 
     @Override
@@ -102,7 +126,7 @@ public class InsightProjectServiceRemote implements InsightProjectService {
                 });
         return response.getBody().stream()
                 .filter(member -> member.getPhaseLink().stream()
-                    .anyMatch(link -> link.getPhase().getState() >= PHASE_STATE_SOLD))
+                        .anyMatch(link -> link.getPhase().getState() >= PHASE_STATE_SOLD))
                 .map(TeamMemberDto::getEmployee)
                 .map(EmployeeDto::toEmployee)
                 .filter(employee -> employee.getLastName() != null)

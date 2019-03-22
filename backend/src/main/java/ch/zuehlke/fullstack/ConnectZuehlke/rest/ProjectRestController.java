@@ -18,40 +18,21 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectRestController {
-    private static final List<String> PROJECTS = Arrays.asList(
-            "C23438", // SNB PRIMA
-            "C23439", // SNB EASYR
-            "C23440", // SNB ESIP
-            "C22520", // SCS COMS
-            "C21844", // SCS IAM
-            "C23719", // SCS P2S
-            "C23782", // VONTOBEL sky
-            "C23781", // VONTOBEL RM
-            "C23410", // SBB PRED MAINT
-            "C23226", // SBB ETR610
-            "C19834", // SBB automat
-            "C23043" // CONCORDIA mobile app
-    );
     private final InsightProjectService insightProjectService;
     private final InsightEmployeeService insightEmployeeService;
     private final InsightSkillService skillService;
     private final ProjectRepository projectRepository;
 
-    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightEmployeeService insightEmployeeService1, InsightSkillService skillService, ProjectRepository projectRepository) {
+    public ProjectRestController(InsightProjectService insightProjectService, InsightEmployeeService insightEmployeeService, InsightSkillService skillService, ProjectRepository projectRepository) {
         this.insightProjectService = insightProjectService;
-        this.insightEmployeeService = insightEmployeeService1;
+        this.insightEmployeeService = insightEmployeeService;
         this.skillService = skillService;
         this.projectRepository = projectRepository;
     }
 
     @GetMapping("")
     public List<Project> getProjects() {
-        List<Project> runningProjects = insightProjectService.getPersistedRunningProjects();
-        List<Project> staticProjects = PROJECTS.stream()
-                .map(insightProjectService::getProject)
-                .collect(Collectors.toList());
-        runningProjects.addAll(staticProjects);
-        return runningProjects;
+        return insightProjectService.getPersistedRunningProjects();
     }
 
     @GetMapping("persist")
@@ -124,7 +105,6 @@ public class ProjectRestController {
     }
 
     @GetMapping("{code}/skills")
-    @Cacheable("skills")
     public List<SkillRating> getProjectSkills(@PathVariable String code) {
         Project project = insightProjectService.getProject(code);
         List<Employee> employees = insightProjectService.getCurrentEmployeesFor(project);

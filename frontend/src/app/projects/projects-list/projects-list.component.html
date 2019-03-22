@@ -8,6 +8,6 @@
   <div *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
-  <app-project-cards [projects]="(projects | async) | search:'name':searchQuery" (projectClicked)="cardClicked($event)"></app-project-cards>
+  <app-project-cards [projects]="(projects | async) | search:'name,code':searchQuery" (projectClicked)="cardClicked($event)"></app-project-cards>
 </div>
 
