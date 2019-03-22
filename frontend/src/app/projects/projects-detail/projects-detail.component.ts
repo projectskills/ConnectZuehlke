@@ -13,7 +13,7 @@ import {ChartData} from '../../shared/domain/ChartData';
 })
 export class ProjectsDetailComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-  private projectId: string;
+  projectId: string;
   project$: Observable<Project>;
   projectLoading = true;
   chartLoading = true;

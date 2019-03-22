@@ -9,7 +9,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule,
-  MatProgressSpinnerModule, MatTabsModule
+  MatProgressSpinnerModule, MatTableModule, MatTabsModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
@@ -19,13 +19,15 @@ import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image
 import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { ProjectsChartsComponent } from './projects-charts/projects-charts.component';
+import { ProjectFittingEmployeesTableComponent } from './project-fitting-employees-table/project-fitting-employees-table.component';
 
 @NgModule({
   declarations: [
     ProjectsListComponent,
     ProjectCardsComponent,
     ProjectsDetailComponent,
-    ProjectsChartsComponent
+    ProjectsChartsComponent,
+    ProjectFittingEmployeesTableComponent
   ],
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { ProjectsChartsComponent } from './projects-charts/projects-charts.compo
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatTabsModule,
+    MatTableModule,
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
     }),
