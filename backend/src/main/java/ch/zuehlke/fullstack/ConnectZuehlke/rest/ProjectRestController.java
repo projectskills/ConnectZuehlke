@@ -4,6 +4,7 @@ import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightEmployeeS
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightProjectService;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service.InsightSkillService;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,6 +105,7 @@ public class ProjectRestController {
     }
 
     @GetMapping("{code}/skills")
+    @Cacheable("skills")
     public List<SkillRating> getProjectSkills(@PathVariable String code) {
         Project project = insightProjectService.getProject(code);
         List<Employee> employees = insightProjectService.getCurrentEmployeesFor(project);

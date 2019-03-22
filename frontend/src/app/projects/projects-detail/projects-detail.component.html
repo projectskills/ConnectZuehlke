@@ -1,0 +1,43 @@
+<div class="main-container">
+  <div *ngIf="projectLoading" class="loading-container">
+    <p>Loading...</p>
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="project-container" *ngIf="project$ | async as project">
+    <div class="title-container">
+      <div class="back-link">
+        <a [routerLink]="['/projects']">
+          <mat-icon>navigate_before</mat-icon> Back
+        </a>
+      </div>
+      <h1>{{ project.code }} - {{ project.name }}</h1>
+    </div>
+    <h3>Info</h3>
+    <mat-divider></mat-divider>
+    <div class="employee-number">
+      <mat-icon>person</mat-icon>
+      Employees
+      <mat-chip-list>
+        <mat-chip color="primary" selected>{{ project.teamSize }}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Description
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        {{ project.description || 'No description provided.'}}
+      </mat-expansion-panel>
+    </mat-accordion>
+    <h4>Skills used</h4>
+    <div *ngIf="chartLoading">
+      <p>Loading...</p>
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="chartData$ | async as chartData">
+      <app-projects-charts [chartData]="chartData"></app-projects-charts>
+    </div>
+  </div>
+</div>

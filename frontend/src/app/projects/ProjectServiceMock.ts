@@ -1,5 +1,6 @@
 import {Observable, of} from 'rxjs';
 import {Project} from '../shared/domain/Project';
+import {SkillRating} from '../shared/domain/SkillRating';
 
 export const PROJECTS: Project[] = [
   {
@@ -60,11 +61,37 @@ export const PROJECTS: Project[] = [
 ];
 
 export class ProjectServiceMock {
-  getAllProjects(): Observable<Project[]> {
+  public getAllProjects(): Observable<Project[]> {
     return of(PROJECTS);
   }
 
-  getProject(code: string): Observable<Project> {
+  public getProject(code: string): Observable<Project> {
     return of(PROJECTS.find(e => e.code === code));
+  }
+
+  public getProjectSkillRatings(projectId: string): Observable<SkillRating[]> {
+    return of<SkillRating[]>([
+      {
+        skill: {
+          name: 'Java',
+          id: 'id123'
+        },
+        rating: 0.6
+      },
+      {
+        skill: {
+          name: 'Springboot',
+          id: 'id153'
+        },
+        rating: 0.2
+      },
+      {
+        skill: {
+          name: 'Angular',
+          id: 'id163'
+        },
+        rating: 0.2
+      }
+    ]);
   }
 }

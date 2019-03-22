@@ -8,7 +8,7 @@ import {Project} from '../../shared/domain/Project';
 })
 export class ProjectCardsComponent {
   @Input() projects: Project[];
-  @Output() projectClicked = new EventEmitter();
+  @Output() projectClicked = new EventEmitter<string>();
 
   public cardClicked(projectId: string): void {
     this.projectClicked.emit(projectId);

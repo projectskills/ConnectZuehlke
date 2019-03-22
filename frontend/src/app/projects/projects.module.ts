@@ -3,17 +3,29 @@ import {CommonModule} from '@angular/common';
 
 import {ProjectsRoutingModule} from './projects-routing.module';
 import {ProjectsListComponent} from './projects-list/projects-list.component';
-import {MatChipsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule} from '@angular/material';
+import {
+  MatChipsModule, MatExpansionModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatProgressSpinnerModule, MatTabsModule
+} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {ProjectCardsComponent} from './projects-cards/project-cards.component';
 import {MatCardModule} from '@angular/material/card';
 import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
+import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ProjectsChartsComponent } from './projects-charts/projects-charts.component';
 
 @NgModule({
   declarations: [
     ProjectsListComponent,
-    ProjectCardsComponent
+    ProjectCardsComponent,
+    ProjectsDetailComponent,
+    ProjectsChartsComponent
   ],
   imports: [
     CommonModule,
@@ -26,9 +38,13 @@ import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image
     MatCardModule,
     MatChipsModule,
     MatIconModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatTabsModule,
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
     }),
+    NgxChartsModule
   ]
 })
 export class ProjectsModule {

@@ -16,7 +16,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.List;
 
 import static ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.PhaseDto.PHASE_STATE_SOLD;
@@ -85,7 +84,8 @@ public class InsightProjectServiceRemote implements InsightProjectService {
     }
 
     @Override
-    public byte[] getProjectPicture(String projectCode) throws IOException {
+    @Cacheable("picture")
+    public byte[] getProjectPicture(String projectCode) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(singletonList(MediaType.APPLICATION_OCTET_STREAM));
 
