@@ -12,7 +12,7 @@ import {tap} from 'rxjs/operators';
 })
 export class ProjectFittingEmployeesTableComponent implements OnInit {
   fittingEmployeesLoading = true;
-  displayedColumns: string[] = ['imageUrl','firstName', 'lastName', 'rating', 'insight'];
+  displayedColumns: string[] = ['imageUrl', 'firstName', 'lastName', 'rating', 'insight'];
 
   dataSource: Observable<EmployeeRating[]>;
 
