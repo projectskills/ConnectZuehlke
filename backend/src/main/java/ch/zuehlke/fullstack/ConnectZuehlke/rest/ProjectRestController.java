@@ -21,7 +21,7 @@ public class ProjectRestController {
             "C23439", // SNB EASYR
             "C23440", // SNB ESIP
             "C22520", // SCS COMS
-            "C22520", // SCS IAM
+            "C21844", // SCS IAM
             "C23719", // SCS P2S
             "C23782", // VONTOBEL sky
             "C23781", // VONTOBEL RM

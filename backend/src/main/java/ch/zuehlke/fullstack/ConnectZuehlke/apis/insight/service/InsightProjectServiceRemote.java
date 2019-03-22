@@ -1,9 +1,12 @@
 package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 
-import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.*;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.CurrentProjectDto;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.EmployeeDto;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ListDto;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ProjectDto;
+import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.TeamMemberDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
-import org.hibernate.annotations.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.List;
 
+import static ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.PhaseDto.PHASE_STATE_SOLD;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpMethod.GET;
@@ -72,8 +76,11 @@ public class InsightProjectServiceRemote implements InsightProjectService {
                 .exchange(queryUrl, GET, null, new ParameterizedTypeReference<List<TeamMemberDto>>() {
                 });
         return response.getBody().stream()
+                .filter(member -> member.getPhaseLink().stream()
+                    .anyMatch(link -> link.getPhase().getState() >= PHASE_STATE_SOLD))
                 .map(TeamMemberDto::getEmployee)
                 .map(EmployeeDto::toEmployee)
+                .filter(employee -> employee.getLastName() != null)
                 .collect(toList());
     }
 
