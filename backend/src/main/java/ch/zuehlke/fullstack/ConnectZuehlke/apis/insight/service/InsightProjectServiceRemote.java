@@ -3,6 +3,7 @@ package ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.service;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.EmployeeDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.ProjectDto;
 import ch.zuehlke.fullstack.ConnectZuehlke.apis.insight.dto.team.TeamMemberDto;
+import ch.zuehlke.fullstack.ConnectZuehlke.common.exceptionHandling.ResourceNotFoundException;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Employee;
 import ch.zuehlke.fullstack.ConnectZuehlke.domain.Project;
 import ch.zuehlke.fullstack.ConnectZuehlke.persistence.ProjectEntity;
@@ -97,7 +98,9 @@ public class InsightProjectServiceRemote implements InsightProjectService {
 
         ResponseEntity<ProjectDto> response = this.insightRestTemplate
                 .getForEntity("/projects/" + code, ProjectDto.class);
-
+        if (response.getBody() == null) {
+            throw new ResourceNotFoundException();
+        }
         Project project = response.getBody().toProject();
         project.setTeamSize(getCurrentEmployeesFor(project).size());
         return project;
